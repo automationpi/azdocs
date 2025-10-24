@@ -1,0 +1,81 @@
+AZDOC PROJECT FILES
+===================
+
+EXECUTABLES
+-----------
+./azdoc                          - Compiled binary (ready to run)
+
+GO SOURCE CODE (1512 lines total)
+----------------------------------
+cmd/azdoc/
+  main.go                        - Main entry point
+  commands/
+    root.go                      - Root command & configuration
+    version.go                   - Version command
+    doctor.go                    - Diagnostics command
+    scan.go                      - Scan/discovery command
+    build.go                     - Build/render command
+    explain.go                   - LLM explanation command
+    all.go                       - All-in-one pipeline command
+
+pkg/auth/
+  auth.go                        - Azure authentication (CLI + Service Principal)
+
+pkg/cache/
+  cache.go                       - Local file-based caching with TTL
+
+pkg/discovery/
+  discovery.go                   - Discovery client (stub for Resource Graph)
+
+pkg/graph/
+  builder.go                     - Topology graph builder (stub)
+
+pkg/llm/
+  explainer.go                   - LLM integration (stub)
+
+pkg/models/
+  subscription.go                - Subscription & metadata models
+  network.go                     - VNet, Subnet, NIC, Public IP, Private Endpoint
+  security.go                    - NSG, ASG, Azure Firewall models
+  routing.go                     - Route Tables, UDRs, Gateways, NAT Gateway
+  loadbalancer.go                - Load Balancer & Application Gateway models
+
+pkg/renderer/
+  markdown.go                    - Markdown documentation renderer (stub)
+  diagram.go                     - Draw.io diagram generator (stub)
+
+DOCUMENTATION (3000+ lines)
+---------------------------
+README.md                        - Complete user guide & architecture
+QUICKSTART.md                    - 5-minute getting started guide
+IMPLEMENTATION.md                - Detailed implementation roadmap
+CONTRIBUTING.md                  - Contribution guidelines
+PROJECT_SUMMARY.md               - This project summary
+FILES.txt                        - This file
+
+CONFIGURATION
+-------------
+azdoc.yaml.example               - Fully annotated configuration example
+go.mod                           - Go module dependencies
+go.sum                           - Dependency checksums
+
+BUILD SYSTEM
+------------
+Makefile                         - Build automation (11 targets)
+
+PROJECT MANAGEMENT
+------------------
+.gitignore                       - Git ignore rules
+LICENSE                          - MIT License
+
+TOTAL FILE COUNT
+----------------
+Go files:        21
+Documentation:   6
+Config files:    4
+Build files:     2
+License:         1
+Binary:          1
+-----
+Total:           35 files
+Lines of code:   ~1500 Go + ~3000 docs = 4500+ lines

@@ -1,0 +1,84 @@
+# azdoc configuration file example
+
+# Azure subscription to document
+subscription-id: "your-subscription-id-here"
+
+# Optional tenant ID
+# tenant-id: "your-tenant-id"
+
+# Output directories
+output:
+  data-dir: "./data"
+  docs-dir: "./docs"
+  diagrams-dir: "./docs/diagrams"
+
+# Cache settings
+cache:
+  dir: ".azdoc"
+  ttl: "24h"
+
+# Discovery settings
+discovery:
+  concurrency: 8
+  timeout: "5m"
+
+  # Resource types to include (empty = all)
+  include-types: []
+
+  # Resource types to exclude
+  exclude-types:
+    # - "Microsoft.Cdn/profiles"  # Skip Front Door for MVP
+
+# Rendering settings
+rendering:
+  # Generate diagrams
+  with-diagrams: true
+
+  # Diagram theme (default, dark, light)
+  theme: "default"
+
+  # Markdown filename
+  md-name: "SUBSCRIPTION.md"
+
+  # Include effective routes (may be slow for large environments)
+  include-effective-routes: false
+
+  # Maximum number of routes to include per NIC
+  max-routes-per-nic: 50
+
+# LLM settings (optional)
+llm:
+  # Enable LLM explanations
+  enabled: false
+
+  # OpenAI model to use
+  model: "gpt-4o-mini"
+
+  # Maximum tokens for LLM responses
+  max-tokens: 2000
+
+  # Temperature for LLM responses
+  temperature: 0.3
+
+# Redaction settings
+redaction:
+  # Redact sensitive data
+  enabled: false
+
+  # Patterns to redact
+  patterns:
+    - "\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}"  # IP addresses
+    # - ".*\\.internal\\..*"  # Internal hostnames
+
+# Rate limiting
+rate-limit:
+  # Requests per second to Azure APIs
+  rps: 10
+
+  # Burst capacity
+  burst: 20
+
+# Logging
+log-level: "info"  # debug, info, warn, error
+no-ansi: false
+quiet: false

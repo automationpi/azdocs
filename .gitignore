@@ -1,0 +1,48 @@
+# Binaries
+azdoc
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.html
+
+# Go workspace file
+go.work
+go.work.sum
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# azdoc specific
+.azdoc/
+data/
+docs/
+diagrams/
+
+# Configuration (may contain secrets)
+azdoc.yaml
+!azdoc.yaml.example
+
+# Temporary files
+*.tmp
+*.log
+PROJECT_SUMMARY.md
+QUICKSTART.md
+IMPLEMENTATION.md
+IMPLEMENTATION_SUMMARY.md
+COMPLETE.md
+FINAL_SUMMARY.md
