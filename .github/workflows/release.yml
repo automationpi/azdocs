@@ -1,0 +1,127 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21'
+
+      - name: Build binaries
+        run: |
+          # Linux AMD64
+          GOOS=linux GOARCH=amd64 go build -ldflags "-s -w -X main.Version=${GITHUB_REF#refs/tags/} -X main.GitCommit=${GITHUB_SHA} -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" -o azdoc-linux-amd64 ./cmd/azdoc
+
+          # Linux ARM64
+          GOOS=linux GOARCH=arm64 go build -ldflags "-s -w -X main.Version=${GITHUB_REF#refs/tags/} -X main.GitCommit=${GITHUB_SHA} -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" -o azdoc-linux-arm64 ./cmd/azdoc
+
+          # macOS AMD64 (Intel)
+          GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w -X main.Version=${GITHUB_REF#refs/tags/} -X main.GitCommit=${GITHUB_SHA} -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" -o azdoc-darwin-amd64 ./cmd/azdoc
+
+          # macOS ARM64 (M1/M2)
+          GOOS=darwin GOARCH=arm64 go build -ldflags "-s -w -X main.Version=${GITHUB_REF#refs/tags/} -X main.GitCommit=${GITHUB_SHA} -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" -o azdoc-darwin-arm64 ./cmd/azdoc
+
+          # Windows AMD64
+          GOOS=windows GOARCH=amd64 go build -ldflags "-s -w -X main.Version=${GITHUB_REF#refs/tags/} -X main.GitCommit=${GITHUB_SHA} -X main.BuildDate=$(date -u +%Y-%m-%dT%H:%M:%SZ)" -o azdoc-windows-amd64.exe ./cmd/azdoc
+
+          # Make binaries executable
+          chmod +x azdoc-*
+
+      - name: Generate checksums
+        run: |
+          sha256sum azdoc-* > checksums.txt
+          cat checksums.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            azdoc-linux-amd64
+            azdoc-linux-arm64
+            azdoc-darwin-amd64
+            azdoc-darwin-arm64
+            azdoc-windows-amd64.exe
+            checksums.txt
+          body: |
+            ## azdoc ${{ github.ref_name }}
+
+            ### 🚀 AI-Powered Azure Documentation & Analysis
+
+            **What's New:**
+            - AI-powered security analysis with prioritized remediation
+            - Cost optimization with savings calculations
+            - Tagging compliance tracking
+            - DR & Monitoring assessment
+            - Executive Summary Dashboard
+            - AI-generated network diagrams
+
+            ### 📥 Installation
+
+            **Linux (AMD64):**
+            ```bash
+            curl -LO https://github.com/automationpi/azdocs/releases/latest/download/azdoc-linux-amd64
+            chmod +x azdoc-linux-amd64
+            sudo mv azdoc-linux-amd64 /usr/local/bin/azdoc
+            ```
+
+            **macOS (Intel):**
+            ```bash
+            curl -LO https://github.com/automationpi/azdocs/releases/latest/download/azdoc-darwin-amd64
+            chmod +x azdoc-darwin-amd64
+            sudo mv azdoc-darwin-amd64 /usr/local/bin/azdoc
+            ```
+
+            **macOS (Apple Silicon M1/M2):**
+            ```bash
+            curl -LO https://github.com/automationpi/azdocs/releases/latest/download/azdoc-darwin-arm64
+            chmod +x azdoc-darwin-arm64
+            sudo mv azdoc-darwin-arm64 /usr/local/bin/azdoc
+            ```
+
+            **Windows (PowerShell):**
+            ```powershell
+            Invoke-WebRequest -Uri "https://github.com/automationpi/azdocs/releases/latest/download/azdoc-windows-amd64.exe" -OutFile "azdoc.exe"
+            ```
+
+            ### 🤖 Quick Start
+
+            ```bash
+            # With AI (recommended)
+            export OPENAI_API_KEY="sk-..."
+            azdoc all --subscription-id <sub-id> --with-diagrams --enable-ai
+
+            # Without AI
+            azdoc all --subscription-id <sub-id> --with-diagrams
+            ```
+
+            ### 📄 Documentation
+
+            - [Full Documentation](https://github.com/automationpi/azdocs#readme)
+            - [Example Report](https://github.com/automationpi/azdocs/blob/master/examples/EXAMPLE_REPORT.md)
+            - [AI Features Guide](https://github.com/automationpi/azdocs/blob/master/AI_FEATURES.md)
+
+            ### 🔒 Verify Checksums
+
+            ```bash
+            curl -LO https://github.com/automationpi/azdocs/releases/latest/download/checksums.txt
+            sha256sum -c checksums.txt
+            ```
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
